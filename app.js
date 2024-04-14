@@ -1,6 +1,7 @@
 import calculateSubtitleDuration from './utils/calculateSubtitleDuration.js';
 
 let autoSet = false;
+let isDataModified = false;
 
 document.getElementById('addSubtitle').addEventListener('click', function() {
   addSubtitleRow();
@@ -29,6 +30,7 @@ function addSubtitleRow(beforeIndex = null, afterIndex = null) {
   } else {
       list.appendChild(row);
   }
+  isDataModified = true;
 }
 
 function setupRowButtons(row) {
@@ -137,6 +139,19 @@ document.getElementById('autoSetDuration').addEventListener('change', function()
   autoSet = this.checked;
   const durations = document.querySelectorAll('.duration-input');
   durations.forEach(input => input.disabled = autoSet);
+});
+
+window.addEventListener('beforeunload', function (e) {
+  if (!isDataModified) {
+      return undefined;
+  }
+
+  // Compatibility management for different browsers
+  const confirmationMessage = 'It looks like you have been editing something. ' +
+                              'If you leave before saving, your changes will be lost.';
+
+  (e || window.event).returnValue = confirmationMessage; // For IE and Firefox
+  return confirmationMessage; // For Safari and Chrome
 });
 
 // Initial call to populate the first subtitle row
