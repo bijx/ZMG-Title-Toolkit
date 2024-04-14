@@ -1,5 +1,5 @@
-import calculateSubtitleDuration from './utils/calculateSubtitleDuration.js';
-import showToast from './components/showToast.js';
+import calculateSubtitleDuration from '../utils/calculateSubtitleDuration.js';
+import showToast from '../components/showToast.js';
 
 let autoSet = false;
 let isDataModified = false;
