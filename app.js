@@ -65,21 +65,18 @@ document.getElementById('export').addEventListener('click', function() {
 
 function generateScript() {
   const rows = document.querySelectorAll('.subtitle-row');
-  let times = [0]; // Initialize with the start time for the first subtitle
+  let totalTime = 0;
   let script = '[\n';
 
   rows.forEach((row, index) => {
       const speaker = row.querySelector('.speaker-name-input').value.trim();
       const text = row.querySelector('.subtitle-text').value.trim().replace(/[\r\n]+/g, ' '); // Removes line breaks
       const duration = parseFloat(row.querySelector('.duration-input').value);
-      if (index > 0) {
-          times.push(times[times.length - 1] + duration); // Calculate start time for this subtitle
-      }
-      script += `\t["${speaker}", "${text}", ${times[index]}]${index < rows.length - 1 ? ',' : ''}\n`;
+      script += `\t["${speaker}", "${text}", ${totalTime}]${index < rows.length - 1 ? ',' : ''}\n`;
+      totalTime += duration;
   });
 
-  const lastDuration = parseFloat(rows[rows.length - 1].querySelector('.duration-input').value);
-  script += `] spawn BIS_fnc_EXP_camp_playSubtitles;\n\nsleep ${lastDuration};\nBIS_fnc_EXP_camp_playSubtitles_terminate = true;\n`;
+  script += `] spawn BIS_fnc_EXP_camp_playSubtitles;\n\nsleep ${totalTime};\nBIS_fnc_EXP_camp_playSubtitles_terminate = true;\n`;
   return script;
 }
 
