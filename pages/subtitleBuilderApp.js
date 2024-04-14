@@ -79,9 +79,9 @@ function generateScript() {
       const text = row.querySelector('.subtitle-text').value.trim().replace(/[\r\n]+/g, ' '); // Removes line breaks
       let duration = parseFloat(row.querySelector('.duration-input').value);
       if (autoSetDuration) {
-          duration = calculateSubtitleDuration(text);
-          duration = Math.round(duration * 100) / 100; // Ensures max two decimal places
-      }
+        duration = calculateSubtitleDuration(text);
+        duration = Number(duration.toFixed(2));
+      }    
       script += `\t["${speaker}", "${text}", ${totalTime}]${index < rows.length - 1 ? ',' : ''}\n`;
       totalTime += duration;
   });
