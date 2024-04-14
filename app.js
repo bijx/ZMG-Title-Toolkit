@@ -1,3 +1,7 @@
+import calculateSubtitleDuration from './utils/calculateSubtitleDuration.js';
+
+let autoSet = false;
+
 document.getElementById('addSubtitle').addEventListener('click', function() {
   addSubtitleRow();
 });
@@ -7,7 +11,7 @@ function addSubtitleRow(beforeIndex = null, afterIndex = null) {
   const row = document.createElement('div');
   row.className = 'subtitle-row';
   row.innerHTML = `
-      <input type="number" placeholder="Duration (s)" step="0.1" class="duration-input">
+      <input type="number" placeholder="Duration (s)" step="0.1" class="duration-input" ${autoSet ? 'disabled' : ''}>
       <input type="text" placeholder="Speaker Name" class="speaker-name-input">
       <input type="text" placeholder="Subtitle Text" class="subtitle-text">
       <button class="action-button green-button add-before"><i class="material-icons">expand_less</i></button>
@@ -64,6 +68,7 @@ document.getElementById('export').addEventListener('click', function() {
 });
 
 function generateScript() {
+  const autoSetDuration = document.getElementById('autoSetDuration').checked;
   const rows = document.querySelectorAll('.subtitle-row');
   let totalTime = 0;
   let script = '[\n';
@@ -71,7 +76,11 @@ function generateScript() {
   rows.forEach((row, index) => {
       const speaker = row.querySelector('.speaker-name-input').value.trim();
       const text = row.querySelector('.subtitle-text').value.trim().replace(/[\r\n]+/g, ' '); // Removes line breaks
-      const duration = parseFloat(row.querySelector('.duration-input').value);
+      let duration = parseFloat(row.querySelector('.duration-input').value);
+      if (autoSetDuration) {
+          duration = calculateSubtitleDuration(text);
+          duration = Math.round(duration * 100) / 100; // Ensures max two decimal places
+      }
       script += `\t["${speaker}", "${text}", ${totalTime}]${index < rows.length - 1 ? ',' : ''}\n`;
       totalTime += duration;
   });
@@ -114,6 +123,21 @@ function showToast(message) {
   }, 6000);
 }
 
+document.getElementById('addSubtitle').addEventListener('click', function() {
+  addSubtitleRow();
+});
+
+document.getElementById('clearAll').addEventListener('click', function() {
+  if (confirm("Are you sure you want to clear all subtitles?")) {
+      document.getElementById('subtitleList').innerHTML = '';
+  }
+});
+
+document.getElementById('autoSetDuration').addEventListener('change', function() {
+  autoSet = this.checked;
+  const durations = document.querySelectorAll('.duration-input');
+  durations.forEach(input => input.disabled = autoSet);
+});
 
 // Initial call to populate the first subtitle row
 addSubtitleRow();
