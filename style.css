@@ -129,7 +129,7 @@ header h1 {
   resize: none;
 }
 
-.special-action-button, .action-button {
+.special-action-button, .special-error-button, .action-button {
   background-color: #424242;
   color: #fff;
   border: none;
@@ -162,6 +162,11 @@ header h1 {
   background-color: #4CAF50;
 }
 
-.red-button {
+.red-button, .special-error-button {
   background-color: #F44336;
+}
+
+label {
+    color: #fff;
+    margin-left: 10px;
 }
