@@ -153,35 +153,34 @@ document.getElementById('confirmImport').addEventListener('click', function() {
 });
 
 function importSubtitles(script) {
-  const match = script.match(/\[\s*\[(.*?)\]\s*spawn BIS_fnc_EXP_camp_playSubtitles;/s);
-  if (!match) throw new Error('Invalid script format.');
   const subtitleList = document.getElementById('subtitleList');
   subtitleList.innerHTML = ''; // Clear existing subtitles
+  const match = script.match(/\[\s*\[(.*?)\]\s*spawn BIS_fnc_EXP_camp_playSubtitles;/s);
+  if (!match) throw new Error('Invalid script format.');
 
-  const entries = match[1].split('],');
-  let previousTime = 0;
-
-  entries.forEach((entry, index) => {
-      if (!entry.trim()) return;
-      const cleanedEntry = entry.replace(/[\[\]']+/g, '').trim();
-      const parts = cleanedEntry.split(',').map(part => part.trim().replace(/"/g, ''));
-      if (parts.length < 3) throw new Error('Entry format error.');
-
-      const speaker = parts[0];
-      const text = parts[1];
-      const currentTime = parseFloat(parts[2]);
-      const duration = index === 0 ? 1.5 : currentTime - previousTime;
-
-      console.log(currentTime)
-
-      addSubtitleRow(null, null, {speaker, text, duration});
-      previousTime = currentTime;
+  const entries = match[1].split('],').map(e => e.trim()).filter(e => e);
+  const subtitles = entries.map(entry => {
+      const cleanedEntry = entry.replace(/[\[\]'"]+/g, '').trim();
+      const parts = cleanedEntry.split(',').map(part => part.trim());
+      return {
+          speaker: parts[0],
+          text: parts[1],
+          time: parseFloat(parts[2])
+      };
   });
 
-  // Set default duration for the last subtitle
-  const lastDurationInput = subtitleList.querySelector('.duration-input:last-child');
-  if (lastDurationInput) lastDurationInput.value = 5.0;
+  subtitles.forEach((subtitle, index) => {
+      let duration;
+      if (index < subtitles.length - 1) {
+          duration = subtitles[index + 1].time - subtitle.time;
+      } else {
+          duration = 7.0; // Default duration for the last subtitle
+      }
+
+      addSubtitleRow(null, null, { speaker: subtitle.speaker, text: subtitle.text, duration });
+  });
 }
+
 
 // Initial call to populate the first subtitle row
 addSubtitleRow();
