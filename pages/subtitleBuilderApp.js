@@ -9,7 +9,7 @@ function addSubtitleRow(beforeIndex = null, afterIndex = null, {speaker, text, d
   const row = document.createElement('div');
   row.className = 'subtitle-row';
   row.innerHTML = `
-      <input type="number" placeholder="Duration (s)" ${duration ? `value=${duration} ` : ''}step="0.1" class="duration-input" ${autoSet ? 'disabled' : ''}>
+      <input type="number" placeholder="Duration (s)" ${duration !== undefined ? `value="${duration}" ` : ''}step="0.1" class="duration-input" ${autoSet ? 'disabled' : ''}>
       <input type="text" placeholder="Speaker Name" ${speaker ? `value="${speaker}" ` : ''}class="speaker-name-input">
       <input type="text" placeholder="Subtitle Text" ${text ? `value="${text}" ` : ''}class="subtitle-text">
       <button class="action-button green-button add-before"><i class="material-icons">expand_less</i></button>
@@ -171,6 +171,8 @@ function importSubtitles(script) {
       const text = parts[1];
       const currentTime = parseFloat(parts[2]);
       const duration = index === 0 ? 1.5 : currentTime - previousTime;
+
+      console.log(currentTime)
 
       addSubtitleRow(null, null, {speaker, text, duration});
       previousTime = currentTime;
