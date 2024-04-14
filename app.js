@@ -1,11 +1,8 @@
 import calculateSubtitleDuration from './utils/calculateSubtitleDuration.js';
+import showToast from './components/showToast.js';
 
 let autoSet = false;
 let isDataModified = false;
-
-document.getElementById('addSubtitle').addEventListener('click', function() {
-  addSubtitleRow();
-});
 
 function addSubtitleRow(beforeIndex = null, afterIndex = null) {
   const list = document.getElementById('subtitleList');
@@ -30,18 +27,20 @@ function addSubtitleRow(beforeIndex = null, afterIndex = null) {
   } else {
       list.appendChild(row);
   }
-  isDataModified = true;
 }
 
 function setupRowButtons(row) {
   row.querySelector('.add-before').addEventListener('click', function() {
       addSubtitleRow(Array.prototype.indexOf.call(row.parentNode.children, row));
+      isDataModified = true;
   });
   row.querySelector('.add-after').addEventListener('click', function() {
       addSubtitleRow(null, Array.prototype.indexOf.call(row.parentNode.children, row));
+      isDataModified = true;
   });
   row.querySelector('.delete').addEventListener('click', function() {
       row.parentNode.removeChild(row);
+      isDataModified = true; 
   });
 }
 
@@ -101,32 +100,9 @@ function downloadScript(script) {
   URL.revokeObjectURL(url);
 }
 
-function showToast(message) {
-  const toast = document.createElement('div');
-  toast.textContent = message;
-  toast.style.position = 'fixed';
-  toast.style.bottom = '20px';
-  toast.style.right = '20px';
-  toast.style.backgroundColor = '#4CAF50';
-  toast.style.color = 'white';
-  toast.style.padding = '10px';
-  toast.style.borderRadius = '5px';
-  toast.style.zIndex = '1000';
-  toast.style.opacity = '0';
-  document.body.appendChild(toast);
-  setTimeout(() => {
-      toast.style.transition = 'opacity 0.5s';
-      toast.style.opacity = '1';
-  }, 100);
-
-  setTimeout(() => {
-      toast.style.opacity = '0';
-      setTimeout(() => document.body.removeChild(toast), 600);
-  }, 6000);
-}
-
 document.getElementById('addSubtitle').addEventListener('click', function() {
   addSubtitleRow();
+  isDataModified = true;
 });
 
 document.getElementById('clearAll').addEventListener('click', function() {
