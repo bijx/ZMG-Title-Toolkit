@@ -1,0 +1,167 @@
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: #121212;
+  color: #fff;
+  display: flex;
+}
+
+#navigation {
+  position: fixed;
+  width: 250px;
+  height: 100%;
+  background-color: #333;
+  box-shadow: 3px 0 5px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  margin-left: 250px;
+  width: calc(100% - 250px);
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.nav-links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav-links li {
+  padding: 10px 20px;
+  padding-left: 0;
+  border-bottom: 1px solid #444;
+}
+
+.nav-links li a {
+  text-decoration: none;
+  color: #bbb;
+  display: block;
+  padding-left: 20px;
+}
+
+.nav-links li.active {
+  background-color: #555;
+  cursor: default;
+}
+
+.nav-links li.active span {
+  color: #fff;
+  padding-left: 20px;
+}
+
+.logo {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  color: #fff;
+  border-bottom: 1px solid #444;
+}
+
+.nav-footer {
+  padding: 0;
+  margin-top: auto;
+}
+
+.back-button {
+  background-color: #424242;
+  color: #fff;
+  border: none;
+  width: 100%;
+  padding: 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-top: 1px solid #444;
+  text-align: left;
+  padding-left: 20px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.back-button:hover {
+  background-color: #535353;
+}
+
+header h1 {
+  margin: 0;
+  padding-bottom: 20px;
+}
+
+.scrollable-list {
+  width: 60%;
+  height: calc(100vh - 250px);
+  overflow-y: auto;
+  margin-top: 20px;
+  margin-left: 20px;
+  border: 1px solid #555;
+  padding: 10px;
+}
+
+.subtitle-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #666;
+  padding-bottom: 10px;
+}
+
+.duration-input, .speaker-name-input, .subtitle-text, .action-button {
+  height: 40px;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+.duration-input {
+  width: 80px;
+}
+
+.speaker-name-input {
+  width: 120px;
+}
+
+.subtitle-text {
+  flex-grow: 1;
+  border: 1px solid #555;
+  background-color: #333;
+  color: #fff;
+  resize: none;
+}
+
+.special-action-button, .action-button {
+  background-color: #424242;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  padding: 10px 15px;
+  margin-left: 20px;
+}
+
+.special-action-button {
+  background-color: #607D8B;
+}
+
+.green-button, .red-button {
+  width: 40px;
+  padding: 0;
+}
+
+.footer-buttons {
+  display: flex;
+  justify-content: left;
+  gap: 10px;
+  padding: 20px 0;
+}
+
+.action-button i.material-icons {
+  font-size: 20px;
+}
+
+.green-button {
+  background-color: #4CAF50;
+}
+
+.red-button {
+  background-color: #F44336;
+}
