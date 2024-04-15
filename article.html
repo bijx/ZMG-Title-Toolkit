@@ -1,25 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet" />
+    <link rel="stylesheet" href="articleStyles.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <title>AAN Article Maker // ZMG Title Toolkit</title>
-  </head>
-  <body>
+</head>
+<body>
     <div id="navigation"></div>
     <main id="main-content">
-      <header>
-        <h1>AAN Article Maker</h1>
-      </header>
-      <section id="content">
+        <header>
+            <h1>AAN Article Maker</h1>
+        </header>
+        <section id="content" class="container">
+            <div class="form-container">
+                <form id="articleForm">
+                  <label for="title">Article Title:</label>
+                  <input type="text" id="title" name="title">
 
-      </section>
+                  <label for="author">Author Name:</label>
+                  <input type="text" id="author" name="author">
+
+                  <label for="date">Date:</label>
+                  <input type="datetime-local" id="date" name="date">
+
+                  <label for="imageSelect">Select Image:</label>
+                  <select id="imageSelect" name="imageSelect"></select>
+
+                  <label for="caption">Image Caption:</label>
+                  <input type="text" id="caption" name="caption">
+
+                  <label for="description">Article Text:</label>
+                  <textarea id="description" name="description"></textarea>
+
+                  <label for="isDraft">
+                      <input type="checkbox" id="isDraft" name="isDraft"> Is Draft
+                  </label>
+                  <br>
+                  <br>
+                  <button type="button" class="special-action-button" id="copyToClipboard">Copy to Clipboard</button>
+                </form>
+            </div>
+            <div class="preview-container">
+              <div class="header">
+                  <img src="assets/images/aan.png" alt="AAN World News Logo">
+                  <ul class="nav">
+                    <li><a href="#">home</a></li>
+                    <li><a href="#">usa</a></li>
+                    <li><a href="#">world</a></li>
+                    <li><a href="#">business</a></li>
+                    <li><a href="#">science</a></li>
+                    <li><a href="#">tech</a></li>
+                    <li><a href="#">culture</a></li>
+                    <li><a href="#">lifestyle</a></li>
+                    <li><a href="#">travel</a></li>
+                    <li><a href="#">magazine</a></li>
+                  </ul>
+              </div>
+              <div class="main-article">
+                  <h1 id="preview-title">Title will appear here...</h1>
+                  <p>by <span id="preview-author">Author</span> <span id="preview-date">8/3/2024 8:30 GMT</span></p>
+                  <img id="preview-image" src="https://community.bistudio.com/wikidata/images/4/49/Arma_3_AOW_artwork_preview_jet_fighter.jpg" alt="Article Image">
+                  <p id="preview-caption">Image caption...</p>
+                  <p id="preview-description">Article text...</p>
+                  <p class="draft-notice" style="display:none;">Draft - do not share without permission!</p>
+              </div>
+              <div class="footer">
+                  <img src="assets/images/aan.png" alt="AAN World News Logo" style="height: 50px;">
+                  <ul class="nav">
+                    <li><a href="#">home</a></li>
+                    <li><a href="#">usa</a></li>
+                    <li><a href="#">world</a></li>
+                    <li><a href="#">business</a></li>
+                    <li><a href="#">science</a></li>
+                    <li><a href="#">tech</a></li>
+                    <li><a href="#">culture</a></li>
+                    <li><a href="#">lifestyle</a></li>
+                    <li><a href="#">travel</a></li>
+                    <li><a href="#">magazine</a></li>
+                  </ul>
+              </div>
+          </div>
+          
+        </section>
     </main>
-    <script src="components/nav.js"></script>
     <script type="module" src="pages/articleBuilderApp.js"></script>
-  </body>
+    <script src="components/nav.js"></script>
+</body>
 </html>
