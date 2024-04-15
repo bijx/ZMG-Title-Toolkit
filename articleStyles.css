@@ -1,0 +1,136 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  height: 100vh;
+  gap: 20px;
+}
+
+.form-container {
+  flex: 1;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  background-color: #121212;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #333;
+  border: 1px solid #555;
+  color: white;
+}
+
+input[type="checkbox"] {
+  width: auto;
+}
+
+textarea {
+  height: 150px;
+}
+
+.preview-container {
+  flex: 1;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #fff;
+  color: black;
+}
+
+label {
+  margin: 0;
+}
+
+.header, .footer {
+  background-color: #851515;
+  padding-top: 10px;
+  padding-left: 10px;
+  text-align: left;
+  color: white;
+}
+
+#preview-author {
+  color: #851515;
+  font-weight: bold;
+}
+
+#preview-date {
+  color: gray;
+}
+
+.nav {
+  padding: 6px;
+  margin: 0;
+  list-style-type: none;
+  overflow: hidden;
+  background-color: #6B1111;
+}
+
+.nav li {
+  display: inline;
+  margin-right: 20px;
+}
+
+.nav li a {
+  text-decoration: none;
+  color: white;
+}
+
+.main-article {
+  width: 100%;
+  margin: auto;
+  font-family: 'Arial', sans-serif;
+}
+
+.main-article img {
+  width: 100%;
+  height: auto;
+}
+
+.draft-notice {
+  color: #566B72;
+  background-color: #ABD5E5;
+  border: 1px solid #566B72;
+  text-align: center;
+  padding: 4px;
+}
+
+.custom-select {
+  position: relative;
+  font-family: Arial, sans-serif;
+}
+
+.select-selected {
+  background-color: #333;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.select-items div {
+  padding: 8px 16px;
+  cursor: pointer;
+  background-color: #333;
+  border-bottom: 1px solid #444;
+  color: white;
+  display: none;
+}
+
+.select-items div:hover, .same-as-selected {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.select-hide {
+  display: none;
+}
+
+.select-items img {
+  width: 50px;
+  height: auto;
+  margin-right: 8px;
+  vertical-align: middle;
+}

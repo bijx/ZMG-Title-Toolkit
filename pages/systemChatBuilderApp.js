@@ -128,12 +128,12 @@ function generateScript() {
   let script = '';
   units.forEach(speaker => {
       const safeSpeaker = speaker.replace(/[^a-zA-Z0-9]/g, '');
-      const variableName = `_group${safeSpeaker}`;
+      const variableName = `group${safeSpeaker}`;
       script += `
-private ${variableName} = createGroup ${selectedGroup}; 
+${variableName} = createGroup ${selectedGroup}; 
 ${variableName} setGroupId ["${speaker}"];
-private _position = [0,0,getTerrainHeightASL [0,0]]; 
-"B_RangeMaster_F" createUnit [_position, ${variableName}, "unit${safeSpeaker} = this"];
+spwnPosition = [0,0,getTerrainHeightASL [0,0]]; 
+"B_RangeMaster_F" createUnit [spwnPosition, ${variableName}, "unit${safeSpeaker} = this"];
 unit${safeSpeaker} allowDamage false;
 `;
   });
