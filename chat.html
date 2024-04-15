@@ -18,16 +18,21 @@
       <section id="content">
         <div class="header-buttons">
           <button id="addSubtitle" class="special-action-button">
-            Add Message
+              Add Message
           </button>
           <button id="clearAll" class="special-error-button">
-            Clear All Messages
+              Clear All Messages
           </button>
-          <label
-            ><input type="checkbox" id="autoSetDuration" /> Auto Set
-            Duration</label
-          >
-        </div>
+          <select id="speakerGroup" class="action-button">
+              <option value="west">BLUFOR</option>
+              <option value="east">OPFOR</option>
+              <option value="resistance">Independent</option>
+              <option value="civilian">Civilian</option>
+          </select>
+          <label>
+              <input type="checkbox" id="autoSetDuration" /> Auto Set Duration
+          </label>
+      </div>      
         <div id="subtitleList" class="scrollable-list">
           <!-- Chat rows will be dynamically inserted here -->
         </div>
@@ -39,6 +44,14 @@
         </div>
       </section>
     </main>
+    <div class="helpbox">
+      <h2>Tips</h2>
+      <ul>
+          <li>Use "Auto Set Duration" to automatically calculate the duration based on text length.</li>
+          <li></li>
+      </ul>
+      <img src="assets/images/sub.png" alt="In-Game Subtitles Example" />
+    </div>
     <script src="components/nav.js"></script>
     <script type="module" src="pages/systemChatBuilderApp.js"></script>
   </body>

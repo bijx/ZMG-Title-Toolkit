@@ -69,22 +69,24 @@ document.getElementById('export').addEventListener('click', function() {
 });
 
 function generateScript() {
+  const selectedGroup = document.getElementById('speakerGroup').value;
+
   // Gather data from UI
   const rows = document.querySelectorAll('.subtitle-row');
   const dialogues = Array.from(rows).map(row => {
-    const text = row.querySelector('.subtitle-text').value.trim();
-    const duration = autoSet ? calculateSubtitleDuration(text) : row.querySelector('.duration-input').value;
-    const speaker = row.querySelector('.speaker-name-input').value.trim();
-    return { duration, speaker, text };
+      const duration = row.querySelector('.duration-input').value;
+      const speaker = row.querySelector('.speaker-name-input').value.trim();
+      const text = row.querySelector('.subtitle-text').value.trim();
+      return { duration, speaker, text };
   });
 
   // Initialize script with setup of groups and units
   const speakers = [...new Set(dialogues.map(d => d.speaker))];
   let script = '';
   speakers.forEach(speaker => {
-    const variableName = `_group${speaker.replace(/[^a-zA-Z0-9]/g, '')}`;
-    script += `
-private ${variableName} = createGroup west; 
+      const variableName = `_group${speaker.replace(/[^a-zA-Z0-9]/g, '')}`;
+      script += `
+private ${variableName} = createGroup ${selectedGroup}; 
 ${variableName} setGroupId ["${speaker}"];
 private _position = [0,0,getTerrainHeightASL [0,0]]; 
 "B_RangeMaster_F" createUnit [_position, ${variableName}, "unit${speaker} = this"];
@@ -94,8 +96,8 @@ unit${speaker} allowDamage false;
 
   // Add the conversation logic
   dialogues.forEach(({ duration, speaker, text }) => {
-    const variableName = `unit${speaker.replace(/[^a-zA-Z0-9]/g, '')}`;
-    script += `
+      const variableName = `unit${speaker.replace(/[^a-zA-Z0-9]/g, '')}`;
+      script += `
 ${variableName} sideChat "${text}";
 sleep ${duration};
 `;
@@ -103,13 +105,12 @@ sleep ${duration};
 
   // Add cleanup logic
   speakers.forEach(speaker => {
-    const variableName = `unit${speaker.replace(/[^a-zA-Z0-9]/g, '')}`;
-    script += `deleteVehicle ${variableName};\n`;
+      const variableName = `unit${speaker.replace(/[^a-zA-Z0-9]/g, '')}`;
+      script += `deleteVehicle ${variableName};\n`;
   });
 
   return script;
 }
-
 
 function downloadScript(script) {
   const blob = new Blob([script], { type: 'text/plain' });
