@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const navElement = document.getElementById('navigation');
   const pages = [
       { name: "Subtitle Builder", link: "index.html" },
-      { name: "Intro Title Builder", link: "intro.html" },
+      { name: "System Chat Builder", link: "chat.html" },
   ];
 
   let navHTML = `
