@@ -1,10 +1,10 @@
 document.addEventListener("DOMContentLoaded", function() {
   const navElement = document.getElementById('navigation');
-  const pages = [
-      { name: "Subtitle Builder", link: "index.html" },
-      { name: "System Chat Builder", link: "chat.html" },
-      { name: "AAN Article Maker", link: "article.html" },
-  ];
+const pages = [
+        { name: "Subtitle Builder", link: "index.html", isBeta: false },
+        { name: "System Chat Builder", link: "chat.html", isBeta: false },
+        { name: "AAN Article Maker", link: "article.html", isBeta: true },
+];
 
   let navHTML = `
       <div class="logo">
@@ -18,12 +18,15 @@ document.addEventListener("DOMContentLoaded", function() {
   if (!currentPath) currentPath = "index.html";
 
   pages.forEach(page => {
-      if (currentPath === page.link) {
-          navHTML += `<li class="active"><span>${page.name}</span></li>`;
-      } else {
-          navHTML += `<li><a href="${page.link}">${page.name}</a></li>`;
-      }
-  });
+    let linkHTML = `<a href="${page.link}">${page.name}${page.isBeta ? '<span class="beta-chip">BETA</span>' : ''}</a>`;
+
+    if (currentPath === page.link) {
+        navHTML += `<li class="active"><span class="active-span">${page.name}</span>${page.isBeta ? '<span class="beta-chip">BETA</span>' : ''} </li>`;
+    } else {
+        navHTML += `<li>${linkHTML}</li>`;
+    }
+});
+
 
   navHTML += `
       </ul>

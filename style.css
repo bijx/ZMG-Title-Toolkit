@@ -48,7 +48,12 @@ main {
   cursor: default;
 }
 
-.nav-links li.active span {
+.nav-links li.active  {
+  color: #fff;
+  padding-left: 20px;
+}
+
+#active-span {
   color: #fff;
   padding-left: 20px;
 }
@@ -244,4 +249,14 @@ label {
   max-width: 100%; /* Ensures the image fits within the box */
   height: auto;
   display: block; /* Removes bottom space/gap */
+}
+
+.beta-chip {
+  background-color: #2196F3; /* Blue background */
+  color: white;
+  font-size: 10px;
+  padding: 3px 6px;
+  border-radius: 3px;
+  margin-left: 10px;
+  vertical-align: middle;
 }
