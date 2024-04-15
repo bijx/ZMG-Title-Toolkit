@@ -1,90 +1,102 @@
 import { images } from '../utils/articleImages.js';
 import showToast from '../components/showToast.js';
 
+function sanitizeInput(input) {
+    // Remove backslashes and double quotes, and allow alphanumerics and punctuation
+    return input.replace(/["\\]/g, '');
+}
+
 document.getElementById('title').addEventListener('input', function() {
-  document.getElementById('preview-title').innerText = this.value || 'Title will appear here...';
+    this.value = sanitizeInput(this.value);
+    document.getElementById('preview-title').innerText = this.value || 'Title will appear here...';
 });
 
 document.getElementById('author').addEventListener('input', function() {
-  document.getElementById('preview-author').innerText = this.value || 'Author';
-});
-
-document.getElementById('date').addEventListener('input', function() {
-  document.getElementById('preview-date').innerText = this.value || 'Date/Time';
-});
-
-document.getElementById('imageSelect').addEventListener('change', function() {
-  const selectedImage = this.options[this.selectedIndex].value;
-  document.getElementById('preview-image').src = selectedImage;
+    this.value = sanitizeInput(this.value);
+    document.getElementById('preview-author').innerText = this.value || 'Author';
 });
 
 document.getElementById('caption').addEventListener('input', function() {
-  document.getElementById('preview-caption').innerText = this.value || 'Image caption...';
+    this.value = sanitizeInput(this.value);
+    document.getElementById('preview-caption').innerText = this.value || 'Image caption...';
 });
 
 document.getElementById('description').addEventListener('input', function() {
-  document.getElementById('preview-description').innerText = this.value || 'Article text...';
+    this.value = sanitizeInput(this.value);
+    document.getElementById('preview-description').innerText = this.value || 'Article text...';
+});
+
+document.getElementById('imageSelect').addEventListener('change', function() {
+    const selectedImage = this.options[this.selectedIndex].value;
+    document.getElementById('preview-image').src = selectedImage;
 });
 
 document.getElementById('isDraft').addEventListener('change', function() {
-  const draftNotice = document.querySelector('.draft-notice');
-  if (this.checked) {
-      draftNotice.style.display = 'block';
-  } else {
-      draftNotice.style.display = 'none';
-  }
+    const draftNotice = document.querySelector('.draft-notice');
+    if (this.checked) {
+        draftNotice.style.display = 'block';
+    } else {
+        draftNotice.style.display = 'none';
+    }
 });
 
-// Initialize image dropdown
-const imageSelect = document.getElementById('imageSelect');
-
-
+// Initialize the image dropdown
 images.forEach(img => {
-  let option = new Option(img.alt, img.src);
-  imageSelect.appendChild(option);
+    let option = new Option(img.alt, img.src);
+    imageSelect.appendChild(option);
 });
 
 document.getElementById('copyToClipboard').addEventListener('click', function() {
-  const title = document.getElementById('title').value;
-  const author = document.getElementById('author').value;
-  const dateInput = document.getElementById('date').value;
-  const selectedImageIndex = document.getElementById('imageSelect').selectedIndex;
-  const imageDetails = images[selectedImageIndex];
-  const caption = document.getElementById('caption').value;
-  const description = document.getElementById('description').value;
-  const isDraft = document.getElementById('isDraft').checked;
+    const title = document.getElementById('title').value;
+    const author = document.getElementById('author').value;
+    const imageOption = images.find(img => img.src === document.getElementById('imageSelect').value);
+    const caption = document.getElementById('caption').value;
+    const description = document.getElementById('description').value.trim();
+    const isDraft = document.getElementById('isDraft').checked;
+    
+    let dateValue = document.getElementById('date').value;
+    let date = new Date(dateValue);
+    if (isNaN(date.getTime())) {
+      date = new Date();
+      dateValue = date.toISOString().slice(0, 16);
+      document.getElementById('date').value = dateValue;
+    }
+    const dateArray = [date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes()];
+    const paragraphs = description.split(/\n+/);
 
-  // Format the date as an array [yyyy, mm, dd, hh, mm]
-  const date = new Date(dateInput);
-  const formattedDate = [
-      date.getFullYear(),
-      date.getMonth() + 1,
-      date.getDate(),
-      date.getHours(),
-      date.getMinutes()
-  ];
+    let scriptCommand = '[\n  [\n';
+    scriptCommand += `    ["title","${sanitizeInput(title)}"],\n`;
+    scriptCommand += `    ["meta",["${sanitizeInput(author)}",[${dateArray.join(',')}],"GMT"]],\n`;
+    scriptCommand += `    ["image",["${imageOption.texturePath}","${sanitizeInput(caption)}"]],\n`;
 
-  // Split the description into paragraphs by new lines
-  const paragraphs = description.split(/\n+/).filter(p => p);
+    paragraphs.forEach((paragraph, index) => {
+        if (paragraph.trim()) {
+            scriptCommand += `    ["text","${sanitizeInput(paragraph.trim())}"]${index === paragraphs.length - 1 ? '' : ','}\n`;
+        }
+    });
 
-  // Build the script array
-  let scriptArray = [
-      ["title", title],
-      ["meta", [author, formattedDate, "GMT"]],
-      ["image", [imageDetails.texturePath, caption]],
-      ...paragraphs.map(paragraph => ["text", paragraph])
-  ];
+    if (isDraft) {
+        scriptCommand += '    ,["draft",[]]\n';
+    }
 
-  if (isDraft) {
-      scriptArray.push(["draft", []]);
-  }
+    scriptCommand += '  ]\n] call BIS_fnc_showAANArticle;';
 
-  const scriptCommand = JSON.stringify([scriptArray]) + ' call BIS_fnc_showAANArticle;';
-
-  // Copy to clipboard
-  navigator.clipboard.writeText(scriptCommand).then(() => {
-      showToast('Script copied to clipboard!');
-  }).catch(err => {
-      console.error('Failed to copy text: ', err);
-  });
+    navigator.clipboard.writeText(scriptCommand).then(() => {
+        showToast('Script copied to clipboard!');
+    }).catch(err => {
+        console.error('Failed to copy text: ', err);
+    });
 });
+
+document.getElementById('date').value = new Date().toISOString().slice(0, 16);
+
+window.addEventListener('beforeunload', function (e) {
+  // Compatibility management for different browsers
+  const confirmationMessage = 'It looks like you have been editing something. ' +
+                              'If you leave before saving, your changes will be lost.';
+
+  (e || window.event).returnValue = confirmationMessage; // For IE and Firefox
+  return confirmationMessage; // For Safari and Chrome
+});
+
+addSubtitleRow();
