@@ -72,9 +72,9 @@ function generateScript() {
   // Gather data from UI
   const rows = document.querySelectorAll('.subtitle-row');
   const dialogues = Array.from(rows).map(row => {
-    const duration = row.querySelector('.duration-input').value;
-    const speaker = row.querySelector('.speaker-name-input').value.trim();
     const text = row.querySelector('.subtitle-text').value.trim();
+    const duration = autoSet ? calculateSubtitleDuration(text) : row.querySelector('.duration-input').value;
+    const speaker = row.querySelector('.speaker-name-input').value.trim();
     return { duration, speaker, text };
   });
 
