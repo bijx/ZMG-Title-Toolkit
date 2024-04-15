@@ -90,7 +90,7 @@ header h1 {
 }
 
 .scrollable-list {
-  width: 60%;
+  width: 90%;
   height: calc(100vh - 250px);
   overflow-y: auto;
   margin-top: 20px;
@@ -213,4 +213,35 @@ label {
   width: 100%;
   height: 100px;
   margin-bottom: 20px;
+}
+
+.helpbox {
+  width: calc(30% - 40px); /* Adjusted to take remaining space next to the subtitle list */
+  height: 100%;
+  margin-top: 20px;
+  margin-left: 20px; /* Space between the list and helpbox */
+  padding: 10px;
+  background-color: #424242; /* Same as other elements for consistency */
+  border: 1px solid #555;
+  color: #fff;
+  box-sizing: border-box;
+}
+
+.helpbox h2 {
+  margin-top: 0;
+  color: #ade2ff; /* Light blue for visibility */
+}
+
+.helpbox ul {
+  padding-left: 20px;
+}
+
+.helpbox li {
+  margin-bottom: 10px;
+}
+
+.helpbox img {
+  max-width: 100%; /* Ensures the image fits within the box */
+  height: auto;
+  display: block; /* Removes bottom space/gap */
 }
