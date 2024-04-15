@@ -29,6 +29,36 @@ function addSubtitleRow(beforeIndex = null, afterIndex = null, {speaker, text, d
   }
 }
 
+function addActionRow(beforeIndex = null, afterIndex = null, {text, duration} = {}) {
+  const list = document.getElementById('subtitleList');
+  const row = document.createElement('div');
+  row.className = 'subtitle-row';
+  row.innerHTML = `
+    <input type="number" placeholder="Duration (s)" ${duration !== undefined ? `value="${duration}" ` : ''}step="0.1" class="duration-input" ${autoSet ? 'disabled' : ''}>
+    <input type="text" placeholder="Action Text" ${text ? `value="${text}" ` : ''}class="subtitle-text">
+    <button class="action-button green-button add-before"><i class="material-icons">expand_less</i></button>
+    <button class="action-button green-button add-after"><i class="material-icons">expand_more</i></button>
+    <button class="action-button red-button delete"><i class="material-icons">delete</i></button>
+  `;
+
+  setupRowButtons(row);
+  preventLineBreaks(row);
+
+  if (beforeIndex !== null) {
+    list.insertBefore(row, list.children[beforeIndex]);
+  } else if (afterIndex !== null) {
+    list.insertBefore(row, list.children[afterIndex + 1] || null);
+  } else {
+    list.appendChild(row);
+  }
+}
+
+document.getElementById('addAction').addEventListener('click', function() {
+  addActionRow();
+  isDataModified = true;
+});
+
+
 function setupRowButtons(row) {
   row.querySelector('.add-before').addEventListener('click', function() {
       addSubtitleRow(Array.prototype.indexOf.call(row.parentNode.children, row));
@@ -70,47 +100,69 @@ document.getElementById('export').addEventListener('click', function() {
 
 function generateScript() {
   const selectedGroup = document.getElementById('speakerGroup').value;
+  const autoSetDuration = document.getElementById('autoSetDuration').checked;
 
   // Gather data from UI
   const rows = document.querySelectorAll('.subtitle-row');
-  const dialogues = Array.from(rows).map(row => {
-      const duration = row.querySelector('.duration-input').value;
-      const speaker = row.querySelector('.speaker-name-input').value.trim();
-      const text = row.querySelector('.subtitle-text').value.trim();
-      return { duration, speaker, text };
+  const dialogues = [];
+  const units = new Set();
+
+  rows.forEach(row => {
+    const text = row.querySelector('.subtitle-text').value.trim();
+      let duration = row.querySelector('.duration-input').value;
+      if (autoSetDuration)  {
+        duration = calculateSubtitleDuration(text);
+        duration = Number(duration.toFixed(2));
+      }
+      const speakerInput = row.querySelector('.speaker-name-input');
+      if (speakerInput) {
+          const speaker = speakerInput.value.trim();
+          dialogues.push({ duration, speaker, text });
+          units.add(speaker);
+      } else {
+          dialogues.push({ duration, text });
+      }
   });
 
-  // Initialize script with setup of groups and units
-  const speakers = [...new Set(dialogues.map(d => d.speaker))];
+  // Initialize script with setup of groups and units for speakers
   let script = '';
-  speakers.forEach(speaker => {
-      const variableName = `_group${speaker.replace(/[^a-zA-Z0-9]/g, '')}`;
+  units.forEach(speaker => {
+      const safeSpeaker = speaker.replace(/[^a-zA-Z0-9]/g, '');
+      const variableName = `_group${safeSpeaker}`;
       script += `
 private ${variableName} = createGroup ${selectedGroup}; 
 ${variableName} setGroupId ["${speaker}"];
 private _position = [0,0,getTerrainHeightASL [0,0]]; 
-"B_RangeMaster_F" createUnit [_position, ${variableName}, "unit${speaker} = this"];
-unit${speaker} allowDamage false;
+"B_RangeMaster_F" createUnit [_position, ${variableName}, "unit${safeSpeaker} = this"];
+unit${safeSpeaker} allowDamage false;
 `;
   });
 
-  // Add the conversation logic
-  dialogues.forEach(({ duration, speaker, text }) => {
-      const variableName = `unit${speaker.replace(/[^a-zA-Z0-9]/g, '')}`;
-      script += `
-${variableName} sideChat "${text}";
-sleep ${duration};
+  // Add the conversation logic and handle actions
+  dialogues.forEach(dialogue => {
+      if (dialogue.speaker) {
+          const safeSpeaker = dialogue.speaker.replace(/[^a-zA-Z0-9]/g, '');
+          script += `
+unit${safeSpeaker} sideChat "${dialogue.text}";
+sleep ${dialogue.duration};
 `;
+      } else {  // Handle action rows differently
+          script += `
+systemChat "${dialogue.text}";
+sleep ${dialogue.duration};
+`;
+      }
   });
 
-  // Add cleanup logic
-  speakers.forEach(speaker => {
-      const variableName = `unit${speaker.replace(/[^a-zA-Z0-9]/g, '')}`;
-      script += `deleteVehicle ${variableName};\n`;
+  // Add cleanup logic for units
+  units.forEach(speaker => {
+      const safeSpeaker = speaker.replace(/[^a-zA-Z0-9]/g, '');
+      script += `deleteVehicle unit${safeSpeaker};\n`;
   });
 
   return script;
 }
+
 
 function downloadScript(script) {
   const blob = new Blob([script], { type: 'text/plain' });
