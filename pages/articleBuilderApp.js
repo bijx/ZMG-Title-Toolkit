@@ -1,43 +1,51 @@
 import { images } from '../utils/articleImages.js';
 import showToast from '../components/showToast.js';
 
+let isDataModified = false;
+
 function sanitizeInput(input) {
     // Remove backslashes and double quotes, and allow alphanumerics and punctuation
     return input.replace(/["\\]/g, '');
 }
 
 document.getElementById('title').addEventListener('input', function() {
-    this.value = sanitizeInput(this.value);
-    document.getElementById('preview-title').innerText = this.value || 'Title will appear here...';
+  this.value = sanitizeInput(this.value);
+  document.getElementById('preview-title').innerText = this.value || 'Title will appear here...';
+  isDataModified = true;
 });
 
 document.getElementById('author').addEventListener('input', function() {
-    this.value = sanitizeInput(this.value);
-    document.getElementById('preview-author').innerText = this.value || 'Author';
+  this.value = sanitizeInput(this.value);
+  document.getElementById('preview-author').innerText = this.value || 'Author';
+  isDataModified = true;
 });
 
 document.getElementById('caption').addEventListener('input', function() {
-    this.value = sanitizeInput(this.value);
-    document.getElementById('preview-caption').innerText = this.value || 'Image caption...';
+  this.value = sanitizeInput(this.value);
+  document.getElementById('preview-caption').innerText = this.value || 'Image caption...';
+  isDataModified = true;
 });
 
 document.getElementById('description').addEventListener('input', function() {
-    this.value = sanitizeInput(this.value);
-    document.getElementById('preview-description').innerText = this.value || 'Article text...';
+  this.value = sanitizeInput(this.value);
+  document.getElementById('preview-description').innerText = this.value || 'Article text...';
+  isDataModified = true;
 });
 
 document.getElementById('imageSelect').addEventListener('change', function() {
-    const selectedImage = this.options[this.selectedIndex].value;
-    document.getElementById('preview-image').src = selectedImage;
+  const selectedImage = this.options[this.selectedIndex].value;
+  document.getElementById('preview-image').src = selectedImage;
+  isDataModified = true;
 });
 
 document.getElementById('isDraft').addEventListener('change', function() {
-    const draftNotice = document.querySelector('.draft-notice');
-    if (this.checked) {
-        draftNotice.style.display = 'block';
-    } else {
-        draftNotice.style.display = 'none';
-    }
+  const draftNotice = document.querySelector('.draft-notice');
+  if (this.checked) {
+    draftNotice.style.display = 'block';
+  } else {
+    draftNotice.style.display = 'none';
+  }
+  isDataModified = true;
 });
 
 // Initialize the image dropdown
@@ -91,6 +99,9 @@ document.getElementById('copyToClipboard').addEventListener('click', function() 
 document.getElementById('date').value = new Date().toISOString().slice(0, 16);
 
 window.addEventListener('beforeunload', function (e) {
+  if (!isDataModified) {
+    return undefined;
+  }
   // Compatibility management for different browsers
   const confirmationMessage = 'It looks like you have been editing something. ' +
                               'If you leave before saving, your changes will be lost.';
