@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet" />
+    <title>System Chat Builder // ZMG Title Toolkit</title>
+  </head>
+  <body>
+    <div id="navigation"></div>
+    <main id="main-content">
+      <header>
+        <h1>System Chat Builder</h1>
+      </header>
+      <section id="content">
+        <div class="header-buttons">
+          <button id="addSubtitle" class="special-action-button">
+            Add Message
+          </button>
+          <button id="clearAll" class="special-error-button">
+            Clear All Messages
+          </button>
+          <label
+            ><input type="checkbox" id="autoSetDuration" /> Auto Set
+            Duration</label
+          >
+        </div>
+        <div id="subtitleList" class="scrollable-list">
+          <!-- Chat rows will be dynamically inserted here -->
+        </div>
+        <div class="footer-buttons">
+          <button id="copyToClipboard" class="action-button">
+            Copy to Clipboard
+          </button>
+          <button id="export" class="action-button">Export SQF</button>
+        </div>
+      </section>
+    </main>
+    <script src="components/nav.js"></script>
+    <script type="module" src="pages/systemChatBuilderApp.js"></script>
+  </body>
+</html>
