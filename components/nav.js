@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const pages = [
       { name: "Subtitle Builder", link: "index.html" },
       { name: "System Chat Builder", link: "chat.html" },
+      { name: "AAN Article Maker", link: "article.html" },
   ];
 
   let navHTML = `
