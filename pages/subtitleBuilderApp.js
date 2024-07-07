@@ -122,7 +122,6 @@ window.addEventListener('beforeunload', function (e) {
       return undefined;
   }
 
-  // Compatibility management for different browsers
   const confirmationMessage = 'It looks like you have been editing something. ' +
                               'If you leave before saving, your changes will be lost.';
 
