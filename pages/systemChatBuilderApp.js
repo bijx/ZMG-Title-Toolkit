@@ -101,6 +101,7 @@ document.getElementById('export').addEventListener('click', function() {
 function generateScript() {
   const selectedGroup = document.getElementById('speakerGroup').value;
   const autoSetDuration = document.getElementById('autoSetDuration').checked;
+  const textSFX = document.getElementById('textSFX').checked;
 
   // Gather data from UI
   const rows = document.querySelectorAll('.subtitle-row');
@@ -147,6 +148,7 @@ unit${safeSpeaker} allowDamage false;
           const safeSpeaker = dialogue.speaker.replace(/[^a-zA-Z0-9]/g, '');
           script += `
 [unit${safeSpeaker}, "${dialogue.text}"] remoteExec ["sideChat"];
+${textSFX ? `[["a3\\ui_f\\data\\sound\\readout\\readouthideclick1.wss"]] remoteExec ["playSoundUI"];sleep 0.1;[["a3\\ui_f\\data\\sound\\readout\\readouthideclick1.wss"]] remoteExec ["playSoundUI"];sleep 0.1;[["a3\\ui_f\\data\\sound\\readout\\readouthideclick1.wss"]] remoteExec ["playSoundUI"];` : ''}
 sleep ${dialogue.duration || 0};
 `;
       } else {  // Handle action rows differently
