@@ -124,8 +124,11 @@ function generateScript() {
       }
   });
 
+  const randomId = Math.random().toString(36).substring(7).toUpperCase();
   // Initialize script with setup of groups and units for speakers
-  let script = '';
+  let script = `
+HYPER_DIALOGUE_${randomId} = {
+`;
   units.forEach(speaker => {
       const safeSpeaker = speaker.replace(/[^a-zA-Z0-9]/g, '');
       const variableName = `group${safeSpeaker}`;
@@ -143,13 +146,13 @@ unit${safeSpeaker} allowDamage false;
       if (dialogue.speaker) {
           const safeSpeaker = dialogue.speaker.replace(/[^a-zA-Z0-9]/g, '');
           script += `
-unit${safeSpeaker} sideChat "${dialogue.text}";
-sleep ${dialogue.duration};
+[unit${safeSpeaker}, "${dialogue.text}"] remoteExec ["sideChat"];
+sleep ${dialogue.duration || 0};
 `;
       } else {  // Handle action rows differently
           script += `
-systemChat "${dialogue.text}";
-sleep ${dialogue.duration};
+["${dialogue.text}"] remoteExec ["systemChat"];
+sleep ${dialogue.duration || 0};
 `;
       }
   });
@@ -159,6 +162,11 @@ sleep ${dialogue.duration};
       const safeSpeaker = speaker.replace(/[^a-zA-Z0-9]/g, '');
       script += `deleteVehicle unit${safeSpeaker};\n`;
   });
+
+  script += `
+};
+[] spawn HYPER_DIALOGUE_${randomId};
+`;
 
   return script;
 }
